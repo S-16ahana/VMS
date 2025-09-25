@@ -1,23 +1,23 @@
 // src/store/rootReducer.jsx
 import { combineReducers } from "redux";
 
-// auth → file is loginSlice.jsx
-import authReducer from "../features/auth/loginslice";
+// match: src/features/auth/loginSlice.jsx
+import authReducer from "../features/auth/loginSlice";
 
-// vendorMaster → file is VendorSlice.js
-import vendorReducer from "../features/vendorMaster/vendorslice";
+// match: src/features/vendorMaster/VendorSlice.js
+import vendorReducer from "../features/vendorMaster/VendorSlice";
 
-// subContractor → file is subContractorSlice.js
-import subcontractorReducer from "../features/subContractor/subcontractorslice";
+// match: src/features/subContractor/subContractorSlice.js
+import subcontractorReducer from "../features/subContractor/subContractorSlice";
 
-// hiring → file is hiringSlice.js
-import hiringReducer from "../features/hiring/hiringslice";
+// match: src/features/hiring/hiringSlice.js
+import hiringReducer from "../features/hiring/hiringSlice";
 
-// reports → file is reportsSlice.js
-import reportsReducer from "../features/reports/reportsslice";
+// match: src/features/reports/reportsSlice.js
+import reportsReducer from "../features/reports/reportsSlice";
 
-// payments → file is paymentSlice.js
-import paymentsReducer from "../features/payments/paymentslice";
+// match: src/features/payments/paymentSlice.js
+import paymentsReducer from "../features/payments/paymentSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
