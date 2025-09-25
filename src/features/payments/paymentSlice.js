@@ -86,7 +86,7 @@ const initialState = {
   netAmount: 0,
 };
 
-const paymentSlice = createSlice({
+const paymentslice = createSlice({
   name: "payments",
   initialState,
   reducers: {
@@ -147,6 +147,6 @@ const paymentSlice = createSlice({
   },
 });
 
-export const { clearError, calculateNetAmount } = paymentSlice.actions;
-export default paymentSlice.reducer;
+export const { clearError, calculateNetAmount } = paymentslice.actions;
+export default paymentslice.reducer;
  

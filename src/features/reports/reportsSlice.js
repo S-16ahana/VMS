@@ -1,4 +1,4 @@
-// src/features/reports/reportsSlice.js
+// src/features/reports/reportsslice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { initialMonthlyEntries } from "../vendorMaster/dummyData";
 
@@ -25,7 +25,7 @@ const initialState = {
   selectedYear: new Date().getFullYear(), // default
 };
 
-const reportsSlice = createSlice({
+const reportsslice = createSlice({
   name: "reports",
   initialState,
   reducers: {
@@ -57,5 +57,5 @@ const reportsSlice = createSlice({
   },
 });
 
-export const { setSelectedYear, clearError, setEntries } = reportsSlice.actions;
-export default reportsSlice.reducer;
+export const { setSelectedYear, clearError, setEntries } = reportsslice.actions;
+export default reportsslice.reducer;

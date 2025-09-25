@@ -1,4 +1,4 @@
-// src/features/hiring/hiringSlice.js
+// src/features/hiring/hiringslice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { initialMonthlyEntries } from "../vendorMaster/dummyData";
 
@@ -114,7 +114,7 @@ const initialState = {
   selectedMonth: 7,
 };
 
-const hiringSlice = createSlice({
+const hiringslice = createSlice({
   name: "hiring",
   initialState,
   reducers: {
@@ -160,5 +160,5 @@ const hiringSlice = createSlice({
   },
 });
 
-export const { setSelectedPeriod, clearError } = hiringSlice.actions;
-export default hiringSlice.reducer;
+export const { setSelectedPeriod, clearError } = hiringslice.actions;
+export default hiringslice.reducer;
