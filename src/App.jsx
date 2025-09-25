@@ -4,11 +4,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import Loader from "./components/common/Loader";
-import DashboardLayout from "./components/layout/DashboardLayout";
+import DashboardLayout from "./components/layout/dashboardLayout";
 
 // Lazy load pages
 const VendorMaster = lazy(() => import("./features/vendorMaster/VenderMaster"));
-const SubContractor = lazy(() => import("./features/subContractor/subContractor"));
+const SubContractor = lazy(() =>
+  import("./features/subContractor/subContractor")
+);
 const Hiring = lazy(() => import("./features/hiring/hiring"));
 const Reports = lazy(() => import("./features/reports/Reports"));
 const Payments = lazy(() => import("./features/payments/payment"));
@@ -25,8 +27,14 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* Redirect legacy /vendordashboard to new top-level vendors route */}
-            <Route path="/vendordashboard" element={<Navigate to="/vendors" replace />} />
-            <Route path="/vendordashboard/*" element={<Navigate to="/vendors" replace />} />
+            <Route
+              path="/vendordashboard"
+              element={<Navigate to="/vendors" replace />}
+            />
+            <Route
+              path="/vendordashboard/*"
+              element={<Navigate to="/vendors" replace />}
+            />
 
             {/* Dashboard layout — shared wrapper for authenticated app pages */}
             <Route path="/" element={<DashboardLayout />}>
