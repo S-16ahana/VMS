@@ -1,5 +1,12 @@
 // src/features/hiring/hiring.jsx
-import React, { useMemo, useState, useEffect, useCallback, lazy, Suspense } from "react";
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -21,25 +28,47 @@ import {
   updateHiringEntry,
   deleteHiringEntry,
   setSelectedPeriod,
-} from "./hiringSlice";
+} from "./hiringslice";
 
-import { fetchVendors } from "../vendorMaster/VendorSlice"; // ensure vendors slice exists
+import { fetchVendors } from "../vendorMaster/vendorslice"; // ensure vendors slice exists
 
 // Lazy load heavy table & modal to reduce initial bundle
-const ReusableTable = lazy(() => import("../../components/common/ReusableTable"));
-const MonthlyEntryModal = lazy(() => import("../subContractor/MonthlyEntryModal"));
+const ReusableTable = lazy(() =>
+  import("../../components/common/ReusableTable")
+);
+const MonthlyEntryModal = lazy(() =>
+  import("../subContractor/MonthlyEntryModal")
+);
 
 const monthNames = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 function Hiring() {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
-  const { entries = [], loading, error, selectedYear, selectedMonth } = useSelector((s) => s.hiring);
+  const {
+    entries = [],
+    loading,
+    error,
+    selectedYear,
+    selectedMonth,
+  } = useSelector((s) => s.hiring);
   // also take vendors loading flag
-  const { items: vendors = [], loading: vendorsLoading = false } = useSelector((s) => s.vendors);
+  const { items: vendors = [], loading: vendorsLoading = false } = useSelector(
+    (s) => s.vendors
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
@@ -54,15 +83,25 @@ function Hiring() {
     }
   }, [dispatch, selectedYear, selectedMonth, vendors]);
 
-  const hsVendors = useMemo(() => vendors.filter((v) => v.type === "HS"), [vendors]);
+  const hsVendors = useMemo(
+    () => vendors.filter((v) => v.type === "HS"),
+    [vendors]
+  );
 
-  const formatCurrency = useCallback((amount) => (amount ? `₹${amount.toLocaleString("en-IN")}` : "₹0"), []);
+  const formatCurrency = useCallback(
+    (amount) => (amount ? `₹${amount.toLocaleString("en-IN")}` : "₹0"),
+    []
+  );
 
   const tableData = useMemo(
     () =>
       (entries || []).map((entry) => {
         const vendor = vendors.find((v) => v.vendor_code === entry.vendor_code);
-        return { ...entry, vendor_name: vendor?.vendor_name || entry.vendor_code, work_type: vendor?.work_type || "" };
+        return {
+          ...entry,
+          vendor_name: vendor?.vendor_name || entry.vendor_code,
+          work_type: vendor?.work_type || "",
+        };
       }),
     [entries, vendors]
   );
@@ -80,7 +119,9 @@ function Hiring() {
         const res = await dispatch(deleteHiringEntry(id));
         // optionally re-fetch on success (depends on your slice)
         if (res?.payload || res?.meta?.requestStatus === "fulfilled") {
-          dispatch(fetchHiringEntries({ year: selectedYear, month: selectedMonth }));
+          dispatch(
+            fetchHiringEntries({ year: selectedYear, month: selectedMonth })
+          );
         }
       }
     },
@@ -95,14 +136,24 @@ function Hiring() {
   const handleSave = useCallback(
     async (entryData) => {
       if (editingEntry) {
-        await dispatch(updateHiringEntry({ id: editingEntry.id, ...entryData }));
+        await dispatch(
+          updateHiringEntry({ id: editingEntry.id, ...entryData })
+        );
       } else {
-        await dispatch(createHiringEntry({ ...entryData, year: selectedYear, month: selectedMonth }));
+        await dispatch(
+          createHiringEntry({
+            ...entryData,
+            year: selectedYear,
+            month: selectedMonth,
+          })
+        );
       }
       // close modal and refresh entries
       setModalOpen(false);
       setEditingEntry(null);
-      dispatch(fetchHiringEntries({ year: selectedYear, month: selectedMonth }));
+      dispatch(
+        fetchHiringEntries({ year: selectedYear, month: selectedMonth })
+      );
     },
     [dispatch, editingEntry, selectedYear, selectedMonth]
   );
@@ -126,71 +177,131 @@ function Hiring() {
         header: "Vendor Code",
         minSize: 90,
         muiTableBodyCellProps: { sx: { whiteSpace: "nowrap" } },
-        Cell: ({ row }) => <Chip label={row.original.vendor_code} color="primary" size="small" />,
+        Cell: ({ row }) => (
+          <Chip label={row.original.vendor_code} color="primary" size="small" />
+        ),
       },
-      { accessorKey: "vendor_name", header: "Vendor Name", minSize: 180, grow: 2, muiTableBodyCellProps: { sx: { whiteSpace: "normal", wordBreak: "break-word" } } },
-      { accessorKey: "particular", header: "Machinery/Vehicle", minSize: 160, grow: 2, muiTableBodyCellProps: { sx: { whiteSpace: "normal", wordBreak: "break-word" } } },
+      {
+        accessorKey: "vendor_name",
+        header: "Vendor Name",
+        minSize: 180,
+        grow: 2,
+        muiTableBodyCellProps: {
+          sx: { whiteSpace: "normal", wordBreak: "break-word" },
+        },
+      },
+      {
+        accessorKey: "particular",
+        header: "Machinery/Vehicle",
+        minSize: 160,
+        grow: 2,
+        muiTableBodyCellProps: {
+          sx: { whiteSpace: "normal", wordBreak: "break-word" },
+        },
+      },
       { accessorKey: "bill_type", header: "Bill Type", minSize: 110 },
       {
         accessorKey: "gross_amount",
         header: "GROSS",
         minSize: 120,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right", fontWeight: 500 }}>{formatCurrency(row.original.gross_amount)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right", fontWeight: 500 }}>
+            {formatCurrency(row.original.gross_amount)}
+          </Box>
+        ),
       },
       {
         accessorKey: "gst_amount",
         header: "GST 18%",
         minSize: 110,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right", color: "orange.main" }}>{formatCurrency(row.original.gst_amount)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right", color: "orange.main" }}>
+            {formatCurrency(row.original.gst_amount)}
+          </Box>
+        ),
       },
       {
         accessorKey: "total_amount",
         header: "TOTAL",
         minSize: 120,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right", fontWeight: 600 }}>{formatCurrency(row.original.total_amount)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right", fontWeight: 600 }}>
+            {formatCurrency(row.original.total_amount)}
+          </Box>
+        ),
       },
       {
         accessorKey: "tds",
         header: "TDS 2%",
         minSize: 100,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right", color: "error.main" }}>{formatCurrency(row.original.tds)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right", color: "error.main" }}>
+            {formatCurrency(row.original.tds)}
+          </Box>
+        ),
       },
       {
         accessorKey: "debit_deduction",
         header: "Debit/Deduction",
         minSize: 120,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right" }}>{formatCurrency(row.original.debit_deduction)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right" }}>
+            {formatCurrency(row.original.debit_deduction)}
+          </Box>
+        ),
       },
       {
         accessorKey: "gst_hold",
         header: "GST Hold",
         minSize: 110,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right" }}>{formatCurrency(row.original.gst_hold)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right" }}>
+            {formatCurrency(row.original.gst_hold)}
+          </Box>
+        ),
       },
       {
         accessorKey: "other_deductions",
         header: "Others",
         minSize: 100,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right" }}>{formatCurrency(row.original.other_deductions)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right" }}>
+            {formatCurrency(row.original.other_deductions)}
+          </Box>
+        ),
       },
       {
         accessorKey: "advances",
         header: "Advances",
         minSize: 110,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right" }}>{formatCurrency(row.original.advances)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right" }}>
+            {formatCurrency(row.original.advances)}
+          </Box>
+        ),
       },
       {
         accessorKey: "part_paid",
         header: "Bal/Part Paid",
         minSize: 120,
-        Cell: ({ row }) => <Box sx={{ textAlign: "right" }}>{formatCurrency(row.original.part_paid)}</Box>,
+        Cell: ({ row }) => (
+          <Box sx={{ textAlign: "right" }}>
+            {formatCurrency(row.original.part_paid)}
+          </Box>
+        ),
       },
       {
         accessorKey: "payables",
         header: "Payables",
         minSize: 130,
         Cell: ({ row }) => (
-          <Box sx={{ textAlign: "right", fontWeight: 700, color: row.original.payables > 0 ? "error.main" : "success.main" }}>
+          <Box
+            sx={{
+              textAlign: "right",
+              fontWeight: 700,
+              color: row.original.payables > 0 ? "error.main" : "success.main",
+            }}
+          >
             {formatCurrency(row.original.payables)}
           </Box>
         ),
@@ -207,10 +318,20 @@ function Hiring() {
                 const entry = row.original;
                 return (
                   <Box sx={{ display: "flex", gap: 0.5 }}>
-                    <IconButton size="small" color="primary" onClick={() => handleEdit(entry)} title="Edit">
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => handleEdit(entry)}
+                      title="Edit"
+                    >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton size="small" color="error" onClick={() => handleDelete(entry.id)} title="Delete">
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => handleDelete(entry.id)}
+                      title="Delete"
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Box>
@@ -242,16 +363,39 @@ function Hiring() {
     <Box sx={{ p: 3 }}>
       {/* Header */}
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h5" component="h1" sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 600, color: "primary.main", mb: 2 }}>
+        <Typography
+          variant="h5"
+          component="h1"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            fontWeight: 600,
+            color: "primary.main",
+            mb: 2,
+          }}
+        >
           Machinery/Vehicles Hiring Service
         </Typography>
 
         {/* Period Selection & Add */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             <FormControl size="small" sx={{ minWidth: 100 }}>
               <InputLabel>Year</InputLabel>
-              <Select value={selectedYear} label="Year" onChange={(e) => handlePeriodChange("year", e.target.value)}>
+              <Select
+                value={selectedYear}
+                label="Year"
+                onChange={(e) => handlePeriodChange("year", e.target.value)}
+              >
                 <MenuItem value={2024}>2024</MenuItem>
                 <MenuItem value={2025}>2025</MenuItem>
                 <MenuItem value={2026}>2026</MenuItem>
@@ -260,9 +404,15 @@ function Hiring() {
 
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <InputLabel>Month</InputLabel>
-              <Select value={selectedMonth} label="Month" onChange={(e) => handlePeriodChange("month", e.target.value)}>
+              <Select
+                value={selectedMonth}
+                label="Month"
+                onChange={(e) => handlePeriodChange("month", e.target.value)}
+              >
                 {monthNames.map((m, i) => (
-                  <MenuItem key={i + 1} value={i + 1}>{m}</MenuItem>
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {m}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -278,10 +428,21 @@ function Hiring() {
         </Box>
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       {/* Table */}
-      <Box sx={{ bgcolor: "background.paper", borderRadius: 2, overflow: "hidden", boxShadow: 1 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          overflow: "hidden",
+          boxShadow: 1,
+        }}
+      >
         <Suspense fallback={<Loader message="Loading table..." />}>
           <ReusableTable
             columns={columns}
@@ -292,11 +453,22 @@ function Hiring() {
               enableSorting: true,
               enableColumnFilters: true,
               enableGlobalFilter: true,
-              getRowId: (row) => row.id ?? `${row.vendor_code}-${row.particular ?? ""}`, // stable id fallback
-              initialState: { pagination: { pageSize: 15 }, density: "compact" },
+              getRowId: (row) =>
+                row.id ?? `${row.vendor_code}-${row.particular ?? ""}`, // stable id fallback
+              initialState: {
+                pagination: { pageSize: 15 },
+                density: "compact",
+              },
               state: { isLoading: loading },
-              muiTableProps: { sx: { tableLayout: "fixed", "& .MuiTableCell-root": { fontSize: "0.875rem" } } },
-              muiTableContainerProps: { sx: { maxHeight: "55vh", overflowX: "auto" } },
+              muiTableProps: {
+                sx: {
+                  tableLayout: "fixed",
+                  "& .MuiTableCell-root": { fontSize: "0.875rem" },
+                },
+              },
+              muiTableContainerProps: {
+                sx: { maxHeight: "55vh", overflowX: "auto" },
+              },
             }}
           />
         </Suspense>

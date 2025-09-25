@@ -1,5 +1,12 @@
 // src/features/vendorMaster/VendorMaster.jsx
-import React, { useMemo, useState, useEffect, useCallback, lazy, Suspense } from "react";
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,10 +18,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loader from "../../components/common/Loader"; // local loader as suspense fallback
 
-import { fetchVendors, createVendor, updateVendor, deleteVendor } from "./VendorSlice";
+import {
+  fetchVendors,
+  createVendor,
+  updateVendor,
+  deleteVendor,
+} from "./vendorslice";
 
 // Lazy load heavy components so they don't inflate initial bundle
-const ReusableTable = lazy(() => import("../../components/common/ReusableTable"));
+const ReusableTable = lazy(() =>
+  import("../../components/common/ReusableTable")
+);
 const VendorModal = lazy(() => import("./VendorModal"));
 
 const VendorMaster = () => {
@@ -88,7 +102,11 @@ const VendorMaster = () => {
   const stats = useMemo(() => {
     const scCount = (vendors || []).filter((v) => v.type === "SC").length;
     const hsCount = (vendors || []).filter((v) => v.type === "HS").length;
-    return { total: (vendors || []).length, subcontractor: scCount, hiring: hsCount };
+    return {
+      total: (vendors || []).length,
+      subcontractor: scCount,
+      hiring: hsCount,
+    };
   }, [vendors]);
 
   // columns memo — uses stable handlers
@@ -115,14 +133,18 @@ const VendorMaster = () => {
         minSize: 200,
         size: 260,
         grow: 2,
-        muiTableBodyCellProps: { sx: { whiteSpace: "normal", wordBreak: "break-word" } },
+        muiTableBodyCellProps: {
+          sx: { whiteSpace: "normal", wordBreak: "break-word" },
+        },
       },
       {
         accessorKey: "work_type",
         header: "Work Type",
         minSize: 160,
         grow: 1,
-        muiTableBodyCellProps: { sx: { whiteSpace: "normal", wordBreak: "break-word" } },
+        muiTableBodyCellProps: {
+          sx: { whiteSpace: "normal", wordBreak: "break-word" },
+        },
       },
       {
         accessorKey: "typeDisplay",
@@ -165,10 +187,20 @@ const VendorMaster = () => {
                 const vendor = row.original;
                 return (
                   <Box sx={{ display: "flex", gap: 1 }}>
-                    <IconButton size="small" color="primary" onClick={() => handleEdit(vendor)} title="Edit Vendor">
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => handleEdit(vendor)}
+                      title="Edit Vendor"
+                    >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton size="small" color="error" onClick={() => handleDelete(vendor.id)} title="Delete Vendor">
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => handleDelete(vendor.id)}
+                      title="Delete Vendor"
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Box>
@@ -184,12 +216,28 @@ const VendorMaster = () => {
   return (
     <Box sx={{ p: 2 }}>
       {/* Header */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, flexWrap: "wrap", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          mb: 1,
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
         <Box>
           <Typography
             variant="h5"
             component="h1"
-            sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 600, color: "primary.main", mb: 0 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              fontWeight: 600,
+              color: "primary.main",
+              mb: 0,
+            }}
           >
             Vendor Master
           </Typography>
@@ -198,15 +246,34 @@ const VendorMaster = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             <Chip label={`Total: ${stats.total}`} variant="outlined" />
-            <Chip label={`SC: ${stats.subcontractor}`} color="primary" variant="outlined" />
-            <Chip label={`HS: ${stats.hiring}`} color="secondary" variant="outlined" />
+            <Chip
+              label={`SC: ${stats.subcontractor}`}
+              color="primary"
+              variant="outlined"
+            />
+            <Chip
+              label={`HS: ${stats.hiring}`}
+              color="secondary"
+              variant="outlined"
+            />
           </Box>
 
           {isAdmin && (
-            <Button variant="contained" onClick={handleAdd} sx={{ minWidth: 140 }}>
+            <Button
+              variant="contained"
+              onClick={handleAdd}
+              sx={{ minWidth: 140 }}
+            >
               + Add Vendor
             </Button>
           )}
@@ -221,7 +288,14 @@ const VendorMaster = () => {
       )}
 
       {/* Table (lazy) */}
-      <Box sx={{ bgcolor: "background.paper", borderRadius: 2, overflow: "hidden", boxShadow: 1 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          overflow: "hidden",
+          boxShadow: 1,
+        }}
+      >
         <Suspense fallback={<Loader message="Loading table..." />}>
           <ReusableTable
             columns={columns}
@@ -237,16 +311,37 @@ const VendorMaster = () => {
               enableColumnFilters: true,
               enableGlobalFilter: true,
               getRowId: (row) => row.id ?? row.vendor_code, // stable id
-              initialState: { pagination: { pageSize: 10 }, sorting: [{ id: "vendor_code", desc: false }] },
+              initialState: {
+                pagination: { pageSize: 10 },
+                sorting: [{ id: "vendor_code", desc: false }],
+              },
               state: { isLoading: loading },
 
               // layout / wrapping
-              muiTableContainerProps: { sx: { maxHeight: "calc(100vh - 260px)", overflowX: "auto" } },
-              muiTableBodyCellProps: { sx: { whiteSpace: "normal", wordBreak: "break-word" } },
-              muiTableProps: { sx: { tableLayout: "fixed", "& .MuiTableCell-root": { fontSize: "0.9rem", px: 1 } } },
+              muiTableContainerProps: {
+                sx: { maxHeight: "calc(100vh - 260px)", overflowX: "auto" },
+              },
+              muiTableBodyCellProps: {
+                sx: { whiteSpace: "normal", wordBreak: "break-word" },
+              },
+              muiTableProps: {
+                sx: {
+                  tableLayout: "fixed",
+                  "& .MuiTableCell-root": { fontSize: "0.9rem", px: 1 },
+                },
+              },
 
-              muiCircularProgressProps: { color: "primary", thickness: 5, size: 55 },
-              muiTopToolbarProps: { sx: { backgroundColor: "#f8fafc", "& .MuiInputBase-root": { backgroundColor: "white" } } },
+              muiCircularProgressProps: {
+                color: "primary",
+                thickness: 5,
+                size: 55,
+              },
+              muiTopToolbarProps: {
+                sx: {
+                  backgroundColor: "#f8fafc",
+                  "& .MuiInputBase-root": { backgroundColor: "white" },
+                },
+              },
 
               // optional: enable virtualization for large datasets
               // enableVirtualization: true,
@@ -257,7 +352,12 @@ const VendorMaster = () => {
 
       {/* Vendor Modal (lazy) */}
       <Suspense fallback={<Loader message="Loading dialog..." />}>
-        <VendorModal open={modalOpen} onClose={handleCloseModal} initialData={editingVendor || {}} onSave={handleSave} />
+        <VendorModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          initialData={editingVendor || {}}
+          onSave={handleSave}
+        />
       </Suspense>
     </Box>
   );

@@ -1,4 +1,4 @@
-// src/features/subContractor/subContractorSlice.js
+// src/features/subContractor/subcontractorslice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { initialMonthlyEntries } from "../vendorMaster/dummyData";
 
@@ -146,7 +146,7 @@ const initialState = {
   selectedMonth: 7,
 };
 
-const subContractorSlice = createSlice({
+const subcontractorslice = createSlice({
   name: "subcontractor",
   initialState,
   reducers: {
@@ -190,5 +190,5 @@ const subContractorSlice = createSlice({
   },
 });
 
-export const { setSelectedPeriod, clearError } = subContractorSlice.actions;
-export default subContractorSlice.reducer;
+export const { setSelectedPeriod, clearError } = subcontractorslice.actions;
+export default subcontractorslice.reducer;

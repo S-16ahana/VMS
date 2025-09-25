@@ -1,4 +1,4 @@
-// src/features/vendorMaster/VendorSlice.js
+// src/features/vendorMaster/vendorslice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { initialVendors } from "./dummyData";
 
@@ -85,7 +85,7 @@ const initialState = {
   error: null,
 };
 
-const vendorSlice = createSlice({
+const vendorslice = createSlice({
   name: "vendors",
   initialState,
   reducers: {
@@ -138,5 +138,5 @@ const vendorSlice = createSlice({
   },
 });
 
-export const { clearError } = vendorSlice.actions;
-export default vendorSlice.reducer;
+export const { clearError } = vendorslice.actions;
+export default vendorslice.reducer;

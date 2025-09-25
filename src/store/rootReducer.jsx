@@ -1,11 +1,11 @@
 // src/store/rootReducer.js
 import { combineReducers } from "redux";
 import authReducer from "../features/auth/loginslice";
-import vendorReducer from "../features/vendorMaster/vendorSlice";
-import subcontractorReducer from "../features/subContractor/subContractorSlice";
-import hiringReducer from "../features/hiring/hiringSlice";
-import reportsReducer from "../features/reports/reportsSlice";
-import paymentsReducer from "../features/payments/paymentSlice"; // <- new
+import vendorReducer from "../features/vendorMaster/vendorslice";
+import subcontractorReducer from "../features/subContractor/subcontractorslice";
+import hiringReducer from "../features/hiring/hiringslice";
+import reportsReducer from "../features/reports/reportsslice";
+import paymentsReducer from "../features/payments/paymentslice"; // <- new
 
 const rootReducer = combineReducers({
   auth: authReducer,

@@ -1,11 +1,24 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Typography, Button, IconButton, Alert, Tooltip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Alert,
+  Tooltip,
+} from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import ReusableTable from "../../components/common/ReusableTable";
 import PaymentModal from "./paymentModal";
-import { fetchPayments, createPayment, updatePayment, deletePayment, markPaymentPaid } from "./paymentSlice";
-import { fetchVendors } from "../vendorMaster/VendorSlice";
+import {
+  fetchPayments,
+  createPayment,
+  updatePayment,
+  deletePayment,
+  markPaymentPaid,
+} from "./paymentslice";
+import { fetchVendors } from "../vendorMaster/vendorslice";
 
 /* -------------------------
    Helper: vendor code normalization & lookup
@@ -37,9 +50,14 @@ const sameVendorCode = (a = "", b = "") => {
 
 const findVendorByCode = (vendors = [], code) => {
   if (!code || !vendors || vendors.length === 0) return null;
-  const exact = vendors.find(v => String(v.vendor_code || "").trim().toUpperCase() === String(code).trim().toUpperCase());
+  const exact = vendors.find(
+    (v) =>
+      String(v.vendor_code || "")
+        .trim()
+        .toUpperCase() === String(code).trim().toUpperCase()
+  );
   if (exact) return exact;
-  return vendors.find(v => sameVendorCode(v.vendor_code, code));
+  return vendors.find((v) => sameVendorCode(v.vendor_code, code));
 };
 
 /* -------------------------
@@ -74,8 +92,14 @@ const downloadFile = (filename, content, mime = "text/csv;charset=utf-8;") => {
    ------------------------- */
 const Payments = () => {
   const dispatch = useDispatch();
-  const { payments = [], loading, error } = useSelector((s) => s.payments || {});
-  const { items: vendors = [], loading: vendorsLoading } = useSelector((s) => s.vendors || { items: [], loading: false });
+  const {
+    payments = [],
+    loading,
+    error,
+  } = useSelector((s) => s.payments || {});
+  const { items: vendors = [], loading: vendorsLoading } = useSelector(
+    (s) => s.vendors || { items: [], loading: false }
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingPayment, setEditingPayment] = useState(null);
@@ -85,13 +109,18 @@ const Payments = () => {
     dispatch(fetchPayments());
   }, [dispatch]);
 
-  const formatCurrency = (a) => (a || a === 0 ? `₹${Number(a).toLocaleString("en-IN")}` : "₹0");
-  const formatDate = (date) => (date ? new Date(date).toLocaleDateString("en-IN") : "");
+  const formatCurrency = (a) =>
+    a || a === 0 ? `₹${Number(a).toLocaleString("en-IN")}` : "₹0";
+  const formatDate = (date) =>
+    date ? new Date(date).toLocaleDateString("en-IN") : "";
 
-  const getVendorName = useCallback((vendorCode) => {
-    const v = findVendorByCode(vendors, vendorCode);
-    return v?.vendor_name || vendorCode || "";
-  }, [vendors]);
+  const getVendorName = useCallback(
+    (vendorCode) => {
+      const v = findVendorByCode(vendors, vendorCode);
+      return v?.vendor_name || vendorCode || "";
+    },
+    [vendors]
+  );
 
   const tableData = useMemo(
     () =>
@@ -108,7 +137,8 @@ const Payments = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this payment?")) return;
+    if (!window.confirm("Are you sure you want to delete this payment?"))
+      return;
     await dispatch(deletePayment(id));
   };
 
@@ -174,7 +204,10 @@ const Payments = () => {
     ]);
 
     const csvContent = [toCsvRow(headers), ...rows.map(toCsvRow)].join("\r\n");
-    const filename = `payments_export_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.csv`;
+    const filename = `payments_export_${new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace(/[:T]/g, "-")}.csv`;
     downloadFile(filename, csvContent);
   }, [tableData]);
 
@@ -185,125 +218,183 @@ const Payments = () => {
     const truncated = `${str.slice(0, maxLen - 3)}...`;
     return (
       <Tooltip title={str} arrow>
-        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", display: "inline-block", maxWidth: 360 }}>
+        <span
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "inline-block",
+            maxWidth: 360,
+          }}
+        >
           {truncated}
         </span>
       </Tooltip>
     );
   };
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: "date",
-      header: "Date",
-      size: 110,
-      Cell: ({ row }) => formatDate(row.original.date),
-    },
-    {
-      accessorKey: "vendorCode",
-      header: "Vendor Code",
-      size: 140,
-      Cell: ({ row }) => row.original.vendorCode || row.original.vendor_code || "",
-    },
-    {
-      accessorKey: "vendor_name",
-      header: "Vendor Name",
-      size: 200,
-    },
-    {
-      accessorKey: "actualAmount",
-      header: "Actual Amount",
-      size: 130,
-      Cell: ({ row }) => formatCurrency(row.original.actualAmount),
-    },
-    {
-      accessorKey: "advance",
-      header: "Advance",
-      size: 110,
-      Cell: ({ row }) => formatCurrency(row.original.advance),
-    },
-    {
-      accessorKey: "netAmount",
-      header: "Net Amount",
-      size: 120,
-      Cell: ({ row }) => formatCurrency(row.original.netAmount),
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-      size: 100,
-    },
-    {
-      accessorKey: "narration",
-      header: "Narration",
-      size: 300,
-      Cell: ({ row }) => renderWithTooltip(row.original.narration, 60),
-    },
-    {
-      accessorKey: "ifsc",
-      header: "IFSC",
-      size: 120,
-      Cell: ({ row }) => row.original.ifsc || "",
-    },
-    {
-      accessorKey: "accountNo",
-      header: "Account No",
-      size: 160,
-      Cell: ({ row }) => row.original.accountNo || row.original.account_no || "",
-    },
-    {
-      accessorKey: "site",
-      header: "Site",
-      size: 180,
-      Cell: ({ row }) => renderWithTooltip(row.original.site, 40),
-    },
-    {
-      accessorKey: "reqBy",
-      header: "Requested By",
-      size: 160,
-      Cell: ({ row }) => row.original.reqBy || row.original.req_by || "",
-    },
-    {
-      accessorKey: "actions",
-      header: "Actions",
-      size: 160,
-      enableSorting: false,
-      Cell: ({ row }) => {
-        const p = row.original;
-        return (
-          <Box sx={{ display: "flex", gap: 0.5 }}>
-            <IconButton size="small" color="primary" onClick={() => handleEdit(p)} title="Edit">
-              <EditIcon fontSize="small" />
-            </IconButton>
-            <IconButton size="small" color="error" onClick={() => handleDelete(p.id)} title="Delete">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-           
-          </Box>
-        );
-      }
-    }
-  ], [handleEdit, handleDelete, handleMarkPaid]);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "date",
+        header: "Date",
+        size: 110,
+        Cell: ({ row }) => formatDate(row.original.date),
+      },
+      {
+        accessorKey: "vendorCode",
+        header: "Vendor Code",
+        size: 140,
+        Cell: ({ row }) =>
+          row.original.vendorCode || row.original.vendor_code || "",
+      },
+      {
+        accessorKey: "vendor_name",
+        header: "Vendor Name",
+        size: 200,
+      },
+      {
+        accessorKey: "actualAmount",
+        header: "Actual Amount",
+        size: 130,
+        Cell: ({ row }) => formatCurrency(row.original.actualAmount),
+      },
+      {
+        accessorKey: "advance",
+        header: "Advance",
+        size: 110,
+        Cell: ({ row }) => formatCurrency(row.original.advance),
+      },
+      {
+        accessorKey: "netAmount",
+        header: "Net Amount",
+        size: 120,
+        Cell: ({ row }) => formatCurrency(row.original.netAmount),
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        size: 100,
+      },
+      {
+        accessorKey: "narration",
+        header: "Narration",
+        size: 300,
+        Cell: ({ row }) => renderWithTooltip(row.original.narration, 60),
+      },
+      {
+        accessorKey: "ifsc",
+        header: "IFSC",
+        size: 120,
+        Cell: ({ row }) => row.original.ifsc || "",
+      },
+      {
+        accessorKey: "accountNo",
+        header: "Account No",
+        size: 160,
+        Cell: ({ row }) =>
+          row.original.accountNo || row.original.account_no || "",
+      },
+      {
+        accessorKey: "site",
+        header: "Site",
+        size: 180,
+        Cell: ({ row }) => renderWithTooltip(row.original.site, 40),
+      },
+      {
+        accessorKey: "reqBy",
+        header: "Requested By",
+        size: 160,
+        Cell: ({ row }) => row.original.reqBy || row.original.req_by || "",
+      },
+      {
+        accessorKey: "actions",
+        header: "Actions",
+        size: 160,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const p = row.original;
+          return (
+            <Box sx={{ display: "flex", gap: 0.5 }}>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={() => handleEdit(p)}
+                title="Edit"
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => handleDelete(p.id)}
+                title="Delete"
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          );
+        },
+      },
+    ],
+    [handleEdit, handleDelete, handleMarkPaid]
+  );
 
   return (
     <Box sx={{ p: 2 }}>
       <Box sx={{ mb: 1 }}>
-        <Typography variant="h5" component="h1" sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 600, color: "primary.main", mb: 0 }}>
+        <Typography
+          variant="h5"
+          component="h1"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            fontWeight: 600,
+            color: "primary.main",
+            mb: 0,
+          }}
+        >
           Vendor Payments
         </Typography>
 
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-          <Typography variant="h6" color="text.secondary">Manage payments to vendors and subcontractors</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          <Typography variant="h6" color="text.secondary">
+            Manage payments to vendors and subcontractors
+          </Typography>
           <Box sx={{ display: "flex", gap: 1 }}>
-            <Button variant="outlined" onClick={exportCsv}>Export CSV</Button>
-            <Button variant="contained" onClick={handleAdd}>+ Add Payment</Button>
+            <Button variant="outlined" onClick={exportCsv}>
+              Export CSV
+            </Button>
+            <Button variant="contained" onClick={handleAdd}>
+              + Add Payment
+            </Button>
           </Box>
         </Box>
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
-      <Box sx={{ bgcolor: "background.paper", borderRadius: 2, overflow: "hidden", boxShadow: 1 }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          overflow: "hidden",
+          boxShadow: 1,
+        }}
+      >
         <ReusableTable
           columns={columns}
           data={tableData}
@@ -316,16 +407,25 @@ const Payments = () => {
             enableSorting: true,
             enableColumnFilters: true,
             enableGlobalFilter: true,
-            initialState: { pagination: { pageSize: 20 }, density: "compact", sorting: [{ id: 'date', desc: true }] },
+            initialState: {
+              pagination: { pageSize: 20 },
+              density: "compact",
+              sorting: [{ id: "date", desc: true }],
+            },
             state: { isLoading: loading || vendorsLoading },
-            muiTableContainerProps: { sx: { maxHeight: "calc(100vh - 260px)", overflowX: "auto" } },
+            muiTableContainerProps: {
+              sx: { maxHeight: "calc(100vh - 260px)", overflowX: "auto" },
+            },
           }}
         />
       </Box>
 
       <PaymentModal
         open={modalOpen}
-        onClose={() => { setModalOpen(false); setEditingPayment(null); }}
+        onClose={() => {
+          setModalOpen(false);
+          setEditingPayment(null);
+        }}
         vendors={vendors}
         initialData={editingPayment || {}}
         onSave={handleSave}
