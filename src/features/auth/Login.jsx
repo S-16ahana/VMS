@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginUser, clearError } from "./loginSlice";
+import { loginUser, clearError } from "./loginslice";
 import ReusableButton from "../../components/common/Button"; // keep your existing import path
 
 // MUI

@@ -26,7 +26,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout as logoutAction } from "../../features/auth/loginSlice";
+import { logout as logoutAction } from "../../features/auth/loginslice";
 
 /* --- constants / static data (stable references) --- */
 const DEFAULT_WIDTH = 260;
@@ -72,9 +72,18 @@ const headerInnerSx = (collapsed) => ({
 });
 
 const listSx = { flex: 1, px: 0 };
-const footerBoxSx = (collapsed) => ({ p: collapsed ? 1 : 2, display: "flex", justifyContent: collapsed ? "center" : "flex-start" });
+const footerBoxSx = (collapsed) => ({
+  p: collapsed ? 1 : 2,
+  display: "flex",
+  justifyContent: collapsed ? "center" : "flex-start",
+});
 
-function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }) {
+function SidebarMui({
+  mobileOpen,
+  onClose,
+  collapsed = false,
+  onToggleCollapse,
+}) {
   const theme = useTheme();
   const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const width = collapsed ? COLLAPSED_WIDTH : DEFAULT_WIDTH;
@@ -102,7 +111,15 @@ function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }
 
   const content = useMemo(
     () => (
-      <Box sx={{ width, display: "flex", flexDirection: "column", height: "100%", px: collapsed ? 0 : 2 }}>
+      <Box
+        sx={{
+          width,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          px: collapsed ? 0 : 2,
+        }}
+      >
         {/* Header */}
         <Box sx={headerBoxSx(collapsed)}>
           <Box
@@ -112,11 +129,24 @@ function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }
             sx={headerInnerSx(collapsed)}
           >
             <BusinessIcon />
-            {!collapsed && <Box sx={{ color: "white", fontWeight: "bold" }}>VMS</Box>}
+            {!collapsed && (
+              <Box sx={{ color: "white", fontWeight: "bold" }}>VMS</Box>
+            )}
           </Box>
 
-          <IconButton sx={{ color: "white" }} onClick={isLgUp ? onToggleCollapse : onClose}>
-            {isLgUp ? (collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />) : <MenuIcon />}
+          <IconButton
+            sx={{ color: "white" }}
+            onClick={isLgUp ? onToggleCollapse : onClose}
+          >
+            {isLgUp ? (
+              collapsed ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )
+            ) : (
+              <MenuIcon />
+            )}
           </IconButton>
         </Box>
 
@@ -137,13 +167,28 @@ function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }
                   color: "inherit",
                 }}
               >
-                <Tooltip title={collapsed ? label : ""} placement="right" disableHoverListener={!collapsed}>
-                  <ListItemIcon sx={{ minWidth: 36, justifyContent: "center", color: "inherit" }}>
+                <Tooltip
+                  title={collapsed ? label : ""}
+                  placement="right"
+                  disableHoverListener={!collapsed}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 36,
+                      justifyContent: "center",
+                      color: "inherit",
+                    }}
+                  >
                     <Icon />
                   </ListItemIcon>
                 </Tooltip>
 
-                {!collapsed && <ListItemText primary={label} sx={{ color: "inherit", fontWeight: 500 }} />}
+                {!collapsed && (
+                  <ListItemText
+                    primary={label}
+                    sx={{ color: "inherit", fontWeight: 500 }}
+                  />
+                )}
               </ListItemButton>
             </ListItem>
           ))}
@@ -153,7 +198,11 @@ function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }
 
         {/* Footer */}
         <Box sx={footerBoxSx(collapsed)}>
-          <Tooltip title={collapsed ? "Logout" : ""} placement="right" disableHoverListener={!collapsed}>
+          <Tooltip
+            title={collapsed ? "Logout" : ""}
+            placement="right"
+            disableHoverListener={!collapsed}
+          >
             <ListItemButton
               onClick={handleLogout}
               sx={{
@@ -164,16 +213,35 @@ function SidebarMui({ mobileOpen, onClose, collapsed = false, onToggleCollapse }
                 color: "inherit",
               }}
             >
-              <ListItemIcon sx={{ minWidth: 36, justifyContent: "center", color: "inherit" }}>
+              <ListItemIcon
+                sx={{
+                  minWidth: 36,
+                  justifyContent: "center",
+                  color: "inherit",
+                }}
+              >
                 <LogoutIcon />
               </ListItemIcon>
-              {!collapsed && <ListItemText primary="Logout" sx={{ color: "inherit", fontWeight: 500 }} />}
+              {!collapsed && (
+                <ListItemText
+                  primary="Logout"
+                  sx={{ color: "inherit", fontWeight: 500 }}
+                />
+              )}
             </ListItemButton>
           </Tooltip>
         </Box>
       </Box>
     ),
-    [width, collapsed, handleHeaderClick, isLgUp, onClose, onToggleCollapse, handleLogout]
+    [
+      width,
+      collapsed,
+      handleHeaderClick,
+      isLgUp,
+      onClose,
+      onToggleCollapse,
+      handleLogout,
+    ]
   );
 
   return (

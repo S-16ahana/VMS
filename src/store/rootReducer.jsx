@@ -1,6 +1,6 @@
 // src/store/rootReducer.js
 import { combineReducers } from "redux";
-import authReducer from "../features/auth/loginSlice";
+import authReducer from "../features/auth/loginslice";
 import vendorReducer from "../features/vendorMaster/vendorSlice";
 import subcontractorReducer from "../features/subContractor/subContractorSlice";
 import hiringReducer from "../features/hiring/hiringSlice";

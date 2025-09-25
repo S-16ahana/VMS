@@ -13,7 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { logout as logoutAction } from "../../features/auth/loginSlice";
+import { logout as logoutAction } from "../../features/auth/loginslice";
 
 // NOTE: We no longer render Settings as a local route inside the header.
 // App.jsx mounts Settings at "/settings". Keep this lazy import only if used elsewhere.

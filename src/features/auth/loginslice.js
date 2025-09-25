@@ -1,4 +1,4 @@
-// src/features/auth/loginSlice.js
+// src/features/auth/loginslice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // built-in demo users (kept as defaults)
@@ -75,7 +75,7 @@ const initialState = {
   isAuthenticated: !!localStorage.getItem("auth_token"),
 };
 
-const loginSlice = createSlice({
+const loginslice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -113,5 +113,5 @@ const loginSlice = createSlice({
   },
 });
 
-export const { logout, clearError } = loginSlice.actions;
-export default loginSlice.reducer;
+export const { logout, clearError } = loginslice.actions;
+export default loginslice.reducer;
