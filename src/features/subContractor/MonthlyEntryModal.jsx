@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CalculateIcon from "@mui/icons-material/Calculate";
-import { calculateEntryTotals } from "./subcontractorslice";
+import { calculateEntryTotals } from "./subContractorSlice";
 
 // Small utility: parse percent-like input into number or empty string
 const parsePercentInput = (input) => {

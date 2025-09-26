@@ -28,9 +28,9 @@ import {
   updateHiringEntry,
   deleteHiringEntry,
   setSelectedPeriod,
-} from "./hiringslice";
+} from "./hiringSlice";
 
-import { fetchVendors } from "../vendorMaster/vendorslice"; // ensure vendors slice exists
+import { fetchVendors } from "../vendorMaster/VendorSlice"; // ensure vendors slice exists
 
 // Lazy load heavy table & modal to reduce initial bundle
 const ReusableTable = lazy(() =>

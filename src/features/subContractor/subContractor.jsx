@@ -28,9 +28,9 @@ import {
   updateSubcontractorEntry,
   deleteSubcontractorEntry,
   setSelectedPeriod,
-} from "./subcontractorslice";
+} from "./subContractorSlice";
 
-import { fetchVendors } from "../vendorMaster/vendorslice";
+import { fetchVendors } from "../vendorMaster/VendorSlice";
 
 // Lazy load heavy table & modal
 const ReusableTable = lazy(() =>

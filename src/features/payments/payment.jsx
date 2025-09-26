@@ -17,8 +17,8 @@ import {
   updatePayment,
   deletePayment,
   markPaymentPaid,
-} from "./paymentslice";
-import { fetchVendors } from "../vendorMaster/vendorslice";
+} from "./paymentSlice";
+import { fetchVendors } from "../vendorMaster/VendorSlice";
 
 /* -------------------------
    Helper: vendor code normalization & lookup

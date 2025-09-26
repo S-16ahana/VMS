@@ -23,7 +23,7 @@ import {
   createVendor,
   updateVendor,
   deleteVendor,
-} from "./vendorslice";
+} from "./VendorSlice";
 
 // Lazy load heavy components so they don't inflate initial bundle
 const ReusableTable = lazy(() =>

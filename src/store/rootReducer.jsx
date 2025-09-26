@@ -2,7 +2,7 @@
 import { combineReducers } from "redux";
 
 // match: src/features/auth/loginSlice.jsx
-import authReducer from "../features/auth/loginSlice";
+import authReducer from "../features/auth/loginslice";
 
 // match: src/features/vendorMaster/VendorSlice.js
 import vendorReducer from "../features/vendorMaster/VendorSlice";

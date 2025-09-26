@@ -17,7 +17,7 @@ import {
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ReusableTable from "../../components/common/ReusableTable";
-import { fetchReportEntries } from "./reportsslice"; // <-- new
+import { fetchReportEntries } from "./reportsSlice"; // <-- new
 
 const MONTH_NAMES = [
   "Jul",
